@@ -16,7 +16,7 @@ tfidf_matrix = vectorizer.fit_transform(data['Description'])
 
 @app.route('/')
 def home():
-    return render_templates('index.html')
+    return render_template('index.html')
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
