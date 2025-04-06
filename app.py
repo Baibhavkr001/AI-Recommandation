@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -7,17 +7,16 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Home route for sanity check
-@app.route('/')
-def home():
-    return "GenAI Assessment Recommender is live!"
-
-# Load data
+# Load CSV data
 data = pd.read_csv("assessments_with_descriptions.csv")
 
-# Vectorize descriptions
+# TF-IDF setup
 vectorizer = TfidfVectorizer(stop_words='english')
 tfidf_matrix = vectorizer.fit_transform(data['Description'])
+
+@app.route('/')
+def home():
+    return render_templates('index.html')
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
@@ -38,5 +37,5 @@ def recommend():
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get("PORT", 5000))  
+    port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
